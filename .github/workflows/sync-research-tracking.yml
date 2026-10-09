@@ -1,0 +1,68 @@
+name: Sincronizar seguimiento de investigación
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Simular los cambios sin escribir en los repositorios
+        type: boolean
+        default: true
+      repository_pattern:
+        description: Expresión regular para seleccionar repositorios
+        type: string
+        default: ^ppi-.*-grupo-[0-9]+$
+      include_templates:
+        description: Incluir repositorios marcados como plantilla
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      dry_run:
+        type: boolean
+        default: true
+      repository_pattern:
+        type: string
+        default: ^ppi-.*-grupo-[0-9]+$
+      include_templates:
+        type: boolean
+        default: false
+    secrets:
+      ORG_AUTOMATION_TOKEN:
+        required: true
+  schedule:
+    - cron: "0 12 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: research-tracking-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar automatización
+        uses: actions/checkout@v4
+
+      - name: Sincronizar hitos y entregables
+        uses: actions/github-script@v8
+        env:
+          CONFIG_PATH: config/research-stages.json
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || inputs.dry_run }}
+          REPOSITORY_PATTERN: ${{ inputs.repository_pattern }}
+          INCLUDE_TEMPLATES: ${{ inputs.include_templates }}
+        with:
+          github-token: ${{ secrets.ORG_AUTOMATION_TOKEN }}
+          script: |
+            const sync = require("./.github/scripts/sync-research-tracking.js");
+            await sync({
+              github,
+              context,
+              core,
+              configPath: process.env.CONFIG_PATH,
+              dryRun: process.env.DRY_RUN === "true",
+              repositoryPattern: process.env.REPOSITORY_PATTERN,
+              includeTemplates: process.env.INCLUDE_TEMPLATES === "true",
+            });

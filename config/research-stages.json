@@ -1,0 +1,54 @@
+{
+  "organization": "upeu-investigacion-iii-2026-2",
+  "repositoryPattern": "^ppi-.*-grupo-[0-9]+$",
+  "stages": [
+    {
+      "id": "problema-justificacion",
+      "title": "Problema y justificación",
+      "dueDate": "2026-10-12",
+      "description": "Definición del problema de investigación y elaboración de su justificación."
+    },
+    {
+      "id": "objetivos-hipotesis-variables",
+      "title": "Objetivos, hipótesis y variables",
+      "dueDate": "2026-10-19",
+      "description": "Formulación de objetivos, hipótesis y variables de investigación."
+    },
+    {
+      "id": "estado-arte-cierre-planteamiento",
+      "title": "Estado del arte y cierre del planteamiento",
+      "dueDate": "2026-10-26",
+      "description": "Desarrollo del estado del arte y consolidación del planteamiento."
+    },
+    {
+      "id": "diseno-investigacion-intervencion",
+      "title": "Diseño de investigación e intervención tecnológica",
+      "dueDate": "2026-11-02",
+      "description": "Definición del diseño de investigación y de la intervención tecnológica."
+    },
+    {
+      "id": "recoleccion-procesamiento-administracion",
+      "title": "Recolección, procesamiento y administración",
+      "dueDate": "2026-11-09",
+      "description": "Planificación de la recolección, el procesamiento y la administración de datos."
+    },
+    {
+      "id": "revision-integral-perfil",
+      "title": "Revisión integral del perfil",
+      "dueDate": "2026-11-16",
+      "description": "Revisión integral y corrección del perfil de investigación."
+    },
+    {
+      "id": "sustentacion-jornada-cientifica",
+      "title": "Sustentación y jornada científica",
+      "dueDate": "2026-11-22",
+      "description": "Preparación y realización de la sustentación y la jornada científica."
+    },
+    {
+      "id": "entrega-final-perfil",
+      "title": "Entrega final del perfil",
+      "dueDate": "2026-11-28",
+      "description": "Entrega de la versión final del perfil de investigación."
+    }
+  ]
+}
