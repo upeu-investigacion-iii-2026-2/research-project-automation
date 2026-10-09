@@ -3,6 +3,15 @@
 Este repositorio sincroniza los hitos y los issues de entrega de los grupos de
 investigación de `upeu-investigacion-iii-2026-2`.
 
+## Dashboard
+
+El avance consolidado se publica en:
+
+<https://upeu-investigacion-iii-2026-2.github.io/research-project-automation/>
+
+El dashboard muestra indicadores generales, avance por etapa y comparación por
+grupo. Los datos se regeneran cada hora desde el estado de los issues.
+
 ## Alcance
 
 Por defecto se procesan los repositorios activos cuyo nombre coincide con

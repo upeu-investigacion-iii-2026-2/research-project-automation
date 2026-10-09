@@ -1,0 +1,53 @@
+name: Actualizar dashboard
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Descargar dashboard
+        uses: actions/checkout@v5
+
+      - name: Generar datos de avance
+        uses: actions/github-script@v8
+        env:
+          CONFIG_PATH: config/research-stages.json
+          OUTPUT_PATH: docs/data.json
+        with:
+          github-token: ${{ secrets.ORG_AUTOMATION_TOKEN }}
+          script: |
+            const generate = require("./.github/scripts/generate-dashboard-data.js");
+            await generate({
+              github,
+              core,
+              configPath: process.env.CONFIG_PATH,
+              outputPath: process.env.OUTPUT_PATH,
+            });
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Empaquetar dashboard
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+
+      - name: Publicar dashboard
+        id: deployment
+        uses: actions/deploy-pages@v4

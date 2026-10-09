@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar automatización
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Sincronizar hitos y entregables
         uses: actions/github-script@v8

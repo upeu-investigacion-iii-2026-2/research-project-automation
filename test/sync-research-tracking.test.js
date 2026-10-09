@@ -9,6 +9,10 @@ const {
   validateConfig,
 } = require("../.github/scripts/sync-research-tracking");
 const sync = require("../.github/scripts/sync-research-tracking");
+const {
+  buildDashboardData,
+  percentage,
+} = require("../.github/scripts/generate-dashboard-data");
 
 test("valida una configuración correcta", () => {
   const config = {
@@ -170,4 +174,71 @@ test("simula la sincronización sin ejecutar escrituras", async () => {
     messages.filter((message) => message.includes("Crear hito:")).length,
     8,
   );
+});
+
+test("calcula porcentajes del dashboard", () => {
+  assert.equal(percentage(3, 8), 38);
+  assert.equal(percentage(0, 0), 0);
+});
+
+test("consolida el avance por grupo y etapa", () => {
+  const config = {
+    organization: "example",
+    stages: [
+      {
+        id: "stage-1",
+        title: "Etapa 1",
+        dueDate: "2026-10-12",
+        description: "Descripción",
+      },
+      {
+        id: "stage-2",
+        title: "Etapa 2",
+        dueDate: "2026-10-19",
+        description: "Descripción",
+      },
+    ],
+  };
+  const repositories = [
+    { name: "grupo-01", html_url: "https://github.com/example/grupo-01" },
+  ];
+  const issues = new Map([
+    [
+      "grupo-01",
+      [
+        {
+          number: 1,
+          title: "Entrega: Etapa 1",
+          body: "<!-- research-project-automation:stage-1 -->",
+          state: "closed",
+          html_url: "https://github.com/example/grupo-01/issues/1",
+        },
+        {
+          number: 2,
+          title: "Entrega: Etapa 2",
+          body: "<!-- research-project-automation:stage-2 -->",
+          state: "open",
+          html_url: "https://github.com/example/grupo-01/issues/2",
+        },
+      ],
+    ],
+  ]);
+
+  const data = buildDashboardData(
+    config,
+    repositories,
+    issues,
+    new Date("2026-10-09T14:00:00Z"),
+  );
+
+  assert.deepEqual(data.summary, {
+    groups: 1,
+    total: 2,
+    completed: 1,
+    pending: 1,
+    percent: 50,
+  });
+  assert.equal(data.groups[0].percent, 50);
+  assert.equal(data.stages[0].percent, 100);
+  assert.equal(data.stages[1].percent, 0);
 });
